@@ -1,0 +1,59 @@
+installation:
+  version: 6.8.0
+  installDate: 2026-06-02T14:26:20.762Z
+  lastUpdated: 2026-06-02T14:26:20.762Z
+modules:
+  - name: core
+    version: 6.8.0
+    installDate: 2026-06-02T14:26:19.908Z
+    lastUpdated: 2026-06-02T14:26:20.749Z
+    source: built-in
+    npmPackage: null
+    repoUrl: null
+  - name: bmm
+    version: 6.8.0
+    installDate: 2026-06-02T14:26:19.866Z
+    lastUpdated: 2026-06-02T14:26:20.750Z
+    source: built-in
+    npmPackage: null
+    repoUrl: null
+  - name: automator
+    version: main
+    installDate: 2026-06-02T14:26:19.991Z
+    lastUpdated: 2026-06-02T14:26:20.753Z
+    source: external
+    npmPackage: bmad-story-automator
+    repoUrl: https://github.com/bmad-code-org/bmad-automator
+    channel: next
+    sha: 51a3cbce4a15ca84df7ac8ab9b9113cc185ca101
+  - name: bmb
+    version: v1.8.1
+    installDate: 2026-06-02T14:26:20.086Z
+    lastUpdated: 2026-06-02T14:26:20.756Z
+    source: external
+    npmPackage: bmad-builder
+    repoUrl: https://github.com/bmad-code-org/bmad-builder
+    channel: stable
+    sha: 3410d952eafe621f31fcdf4dd5efb2b06690a306
+  - name: cis
+    version: v0.2.1
+    installDate: 2026-06-02T14:26:20.123Z
+    lastUpdated: 2026-06-02T14:26:20.759Z
+    source: external
+    npmPackage: bmad-creative-intelligence-suite
+    repoUrl: https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite
+    channel: stable
+    sha: 07a8dd03d196a762f21c241d985293fe5b0f90e7
+  - name: wds
+    version: v0.4.3
+    installDate: 2026-06-02T14:26:20.621Z
+    lastUpdated: 2026-06-02T14:26:20.762Z
+    source: external
+    npmPackage: bmad-wds
+    repoUrl: https://github.com/bmad-code-org/bmad-method-wds-expansion
+    channel: stable
+    sha: cc16f09fcfab26d35635af1491f36a38a8431c8d
+ides:
+  - codex
+  - claude-code
+  - github-copilot

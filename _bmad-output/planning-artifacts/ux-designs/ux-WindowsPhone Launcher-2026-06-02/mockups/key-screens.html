@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WindowsPhone Launcher Key Screens</title>
+  <style>
+    :root {
+      --black: #000;
+      --panel: #111;
+      --ink: #fff;
+      --muted: #bdbdbd;
+      --cyan: #00bcf2;
+      --blue: #0078d7;
+      --green: #00a300;
+      --red: #e51400;
+      --purple: #800080;
+      --orange: #f7630c;
+      --gap: 4px;
+      --unit: 72px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: #1b1b1b;
+      color: var(--ink);
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    h1 { margin: 0 0 22px; font-size: 22px; font-weight: 600; }
+    h2 { margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #ddd; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      align-items: start;
+    }
+    .phone {
+      width: 320px;
+      min-height: 640px;
+      background: var(--black);
+      padding: 18px 8px;
+      border: 1px solid #444;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: var(--unit);
+      gap: var(--gap);
+    }
+    .tile {
+      position: relative;
+      background: var(--blue);
+      color: var(--ink);
+      padding: 8px;
+      border-radius: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 48px;
+      min-height: 48px;
+    }
+    .tile.w2 { grid-column: span 2; grid-row: span 2; }
+    .tile.w4h2 { grid-column: span 4; grid-row: span 2; }
+    .cyan { background: var(--cyan); color: #000; }
+    .green { background: var(--green); }
+    .red { background: var(--red); }
+    .purple { background: var(--purple); }
+    .orange { background: var(--orange); color: #000; }
+    .icon { font-size: 24px; font-weight: 700; }
+    .info { font-size: 28px; font-weight: 600; line-height: 1.05; }
+    .label { font-size: 12px; font-weight: 500; }
+    .count { position: absolute; right: 8px; bottom: 8px; font-size: 18px; font-weight: 600; }
+    .handle {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #fff;
+      background: rgba(0,0,0,.35);
+    }
+    .handle.unpin { left: 6px; top: 6px; }
+    .handle.resize { right: 6px; bottom: 6px; }
+    .list-row {
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+      gap: 12px;
+      font-size: 16px;
+    }
+    .search {
+      height: 48px;
+      background: var(--panel);
+      border: 1px solid #333;
+      padding: 14px;
+      margin-bottom: 14px;
+      color: var(--muted);
+    }
+    .alpha { margin: 18px 0 6px; color: var(--muted); font-size: 13px; }
+    .screen-copy { color: var(--muted); font-size: 14px; line-height: 1.4; margin-bottom: 18px; }
+    .button {
+      height: 48px;
+      border: 1px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .field {
+      height: 48px;
+      background: var(--panel);
+      border: 1px solid #333;
+      padding: 14px;
+      margin: 12px 0;
+      color: var(--ink);
+    }
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 48px;
+      border-bottom: 1px solid #252525;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>WindowsPhone Launcher Key Screens</h1>
+  <div class="grid">
+    <section>
+      <h2>Start Screen</h2>
+      <div class="phone">
+        <div class="tiles">
+          <div class="tile w4h2 cyan"><div class="info">Set location</div><div class="label">Weather</div></div>
+          <div class="tile w2 blue"><div class="info">09:41</div><div class="label">Clock</div></div>
+          <div class="tile w2 green"><div class="icon">SMS</div><div class="count">3</div><div class="label">Messages</div></div>
+          <div class="tile red"><div class="icon">P</div><div class="label">Phone</div></div>
+          <div class="tile w2 purple"><div class="icon">Cal</div><div class="count">2</div><div class="label">Calendar</div></div>
+          <div class="tile orange"><div class="icon">S</div><div class="label">Settings</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>App List</h2>
+      <div class="phone">
+        <div class="search">Search apps</div>
+        <div class="alpha">A</div>
+        <div class="list-row"><span class="icon">A</span>Alarms</div>
+        <div class="list-row"><span class="icon">A</span>Authenticator</div>
+        <div class="alpha">C</div>
+        <div class="list-row"><span class="icon">C</span>Calendar</div>
+        <div class="list-row"><span class="icon">C</span>Camera</div>
+        <div class="alpha">S</div>
+        <div class="list-row"><span class="icon">S</span>Settings</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Edit Mode</h2>
+      <div class="phone">
+        <div class="tiles">
+          <div class="tile w4h2 cyan"><div class="handle unpin"></div><div class="info">24 C</div><div class="label">Weather</div><div class="handle resize"></div></div>
+          <div class="tile w2 blue"><div class="handle unpin"></div><div class="info">09:41</div><div class="label">Clock</div><div class="handle resize"></div></div>
+          <div class="tile w2 green"><div class="icon">SMS</div><div class="count">3</div><div class="label">Messages</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Onboarding</h2>
+      <div class="phone">
+        <div class="info">A living Start Screen for Android.</div>
+        <p class="screen-copy">Sharp Tiles, useful counts, weather, clock, and the Windows Phone feel without turning Android into a clone.</p>
+        <div class="button">Use as default launcher</div>
+        <div class="button">Set up Live Tile permissions</div>
+        <div class="button">Skip for now</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Weather Setup</h2>
+      <div class="phone">
+        <div class="info">Weather</div>
+        <p class="screen-copy">Set a city manually. Auto-location is optional.</p>
+        <div class="field">City or location</div>
+        <div class="button">Save location</div>
+        <div class="button">Use approximate location</div>
+        <p class="screen-copy">Weather data comes from the selected provider. Provider terms may require attribution here.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Settings</h2>
+      <div class="phone">
+        <div class="settings-row"><span>Color mode</span><span>Multi-color</span></div>
+        <div class="settings-row"><span>Accent color</span><span>Blue</span></div>
+        <div class="settings-row"><span>Background</span><span>Black</span></div>
+        <div class="settings-row"><span>Weather location</span><span>Manual</span></div>
+        <div class="settings-row"><span>Live Tile animation</span><span>On</span></div>
+        <div class="settings-row"><span>Notification access</span><span>Open settings</span></div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
