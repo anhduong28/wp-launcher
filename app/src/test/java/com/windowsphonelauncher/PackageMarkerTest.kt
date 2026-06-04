@@ -58,6 +58,14 @@ class PackageMarkerTest {
             "Story 1.2 must not add permissions.",
             manifest.getElementsByTagName("uses-permission").length > 0,
         )
+        assertFalse(
+            "Story 1.3 must not add notification listener services.",
+            manifest.getElementsByTagName("service").asElements().any {
+                it.getElementsByTagName("action")
+                    .asElements()
+                    .any { action -> action.androidName == "android.service.notification.NotificationListenerService" }
+            },
+        )
     }
 
     private fun parseManifest(): Element {
