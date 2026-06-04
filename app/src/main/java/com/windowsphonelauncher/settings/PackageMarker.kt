@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.settings
+
+internal object SettingsPackageMarker

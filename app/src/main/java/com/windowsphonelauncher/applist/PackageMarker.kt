@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.applist
+
+internal object AppListPackageMarker

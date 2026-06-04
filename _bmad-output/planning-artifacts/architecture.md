@@ -1,6 +1,6 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 5]
-lastStep: 5
+stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8]
+lastStep: 8
 inputDocuments:
   - "_bmad-output/planning-artifacts/prds/prd-WindowsPhone Launcher-2026-06-02/prd.md"
   - "_bmad-output/planning-artifacts/ux-designs/ux-WindowsPhone Launcher-2026-06-02/DESIGN.md"
@@ -10,6 +10,8 @@ workflowType: 'architecture'
 project_name: 'WindowsPhone Launcher'
 user_name: 'Edward'
 date: '2026-06-02'
+status: 'complete'
+completedAt: '2026-06-03'
 ---
 
 # Architecture Decision Document
@@ -357,3 +359,234 @@ Recommended feature layout:
 - Hardcoded strings used as logic keys
 - Empty tiles when cached live data already exists
 - Treating permission revocation as an app-wide failure
+
+## Project Structure & Boundaries
+
+### Complete Project Directory Structure
+
+```text
+windowsphone-launcher/
+|-- README.md
+|-- settings.gradle.kts
+|-- build.gradle.kts
+|-- gradle.properties
+|-- app/
+|   |-- build.gradle.kts
+|   |-- proguard-rules.pro
+|   `-- src/
+|       |-- main/
+|       |   |-- AndroidManifest.xml
+|       |   |-- java/com/windowsphonelauncher/
+|       |   |   |-- MainActivity.kt
+|       |   |   |-- WindowsPhoneLauncherApp.kt
+|       |   |   |-- core/
+|       |   |   |-- datacore/
+|       |   |   |-- tilecore/
+|       |   |   |-- startscreen/
+|       |   |   |-- applist/
+|       |   |   |-- editmode/
+|       |   |   |-- settings/
+|       |   |   |-- weather/
+|       |   |   |-- onboarding/
+|       |   |   `-- permissions/
+|       |   `-- res/
+|       |       |-- drawable/
+|       |       |-- mipmap-*/
+|       |       |-- values/
+|       |       `-- xml/
+|       |-- test/java/com/windowsphonelauncher/
+|       `-- androidTest/java/com/windowsphonelauncher/
+`-- docs/
+```
+
+### Architectural Boundaries
+
+**API Boundaries:**
+No backend API exists in MVP. External boundaries are Android platform APIs, Open-Meteo, LauncherApps, NotificationListenerService, Calendar Provider, DataStore, Room, and WorkManager.
+
+**Component Boundaries:**
+UI composables emit actions only. ViewModels own screen state. Repositories own data access. `tilecore` owns layout rules and live tile contracts. Feature packages consume `tilecore` and `datacore` through explicit models and repositories.
+
+**Service Boundaries:**
+Weather refresh runs through WorkManager and the weather repository. Notification counts are isolated behind a permission-gated notification source. Calendar counts are isolated behind a calendar source. App discovery and launch behavior are isolated in `applist`.
+
+**Data Boundaries:**
+Room owns tile layout, pinned tile state, app cache, and cached live snapshots. DataStore owns preferences, onboarding flags, animation settings, accent color, and weather setup flags. UI never reads Room or DataStore directly.
+
+### Requirements to Structure Mapping
+
+**Live Tile System:**
+`tilecore/`, `datacore/`, `weather/`, `permissions/`
+
+**Tile Grid and Tile Sizing:**
+`startscreen/`, `editmode/`, `tilecore/layout/`
+
+**Start Screen Editing:**
+`editmode/`, `startscreen/`, `tilecore/layout/`
+
+**Tile Visual Style:**
+`core/design/`, `settings/`, `startscreen/`
+
+**App List:**
+`applist/`, `permissions/`
+
+**Launcher Settings:**
+`settings/`, `weather/`, `core/design/`
+
+**Cross-Cutting Concerns:**
+Accessibility lives beside each UI surface with shared helpers in `core/accessibility`. Permission gating lives in `permissions`. Typed errors and stale-state handling live in feature repositories and shared core models.
+
+### Integration Points
+
+**Internal Communication:**
+Repositories expose Flow-based data. ViewModels expose StateFlow UI state and SharedFlow one-shot effects. Compose sends explicit action callbacks.
+
+**External Integrations:**
+LauncherApps for installed apps, NotificationListenerService for notification-derived counts, Calendar Provider for event counts, Open-Meteo for weather, WorkManager for weather refresh.
+
+**Data Flow:**
+Platform/provider source -> repository -> Room/DataStore cache -> ViewModel state -> Compose UI. UI actions flow back through ViewModel methods into repositories and tile layout engine.
+
+### File Organization Patterns
+
+**Configuration Files:**
+Gradle and Android config stay at root and `app/`. App metadata and launcher declarations stay in `AndroidManifest.xml`.
+
+**Source Organization:**
+Feature-first packages. Shared primitives only move to `core`, `tilecore`, or `datacore` when reused by multiple features.
+
+**Test Organization:**
+Unit tests mirror production packages under `test`. Instrumentation, Compose UI tests, launcher behavior tests, and performance-sensitive grid tests live under `androidTest`.
+
+**Asset Organization:**
+Launcher icons, tile drawables, adaptive icon assets, and XML resources stay under `app/src/main/res`, grouped by Android resource type.
+
+### Development Workflow Integration
+
+**Development Server Structure:**
+No development server is required. Development runs through Android Studio or Gradle install tasks against emulator/device.
+
+**Build Process Structure:**
+Gradle builds the Android application module. Build variants may hold local release/debug differences, but no backend environment is required for MVP.
+
+**Deployment Structure:**
+The structure supports Google Play distribution through the Android app module, with launcher manifest declarations, ProGuard rules, and policy-sensitive permission declarations isolated for review.
+
+## Architecture Validation Results
+
+### Coherence Validation
+
+**Decision Compatibility:**
+The architecture is coherent. Kotlin native Android, Compose-first UI, Room, DataStore, WorkManager, LauncherApps, NotificationListenerService, Calendar Provider, and a weather provider adapter work together without conceptual conflict. The local-first MVP scope also aligns with the privacy and Google Play policy constraints.
+
+**Pattern Consistency:**
+The implementation patterns support the decisions: feature-first packages, immutable UI state, UDF, repository boundaries, typed errors, permission-gated states, and stale cached tile data all reinforce the chosen architecture.
+
+**Structure Alignment:**
+The project structure supports the architecture. `tilecore` owns layout/live tile contracts, `datacore` owns persistence, feature packages own screens and ViewModels, and `permissions` isolates capability gating.
+
+### Requirements Coverage Validation
+
+**Feature Coverage:**
+All six PRD feature groups are represented: Live Tile System, Tile Grid and Tile Sizing, Start Screen Editing, Tile Visual Style, App List, and Launcher Settings.
+
+**Functional Requirements Coverage:**
+FR-1 through FR-25 are architecturally supported through the Start Screen, App List, Edit Mode, Settings, Weather, Permissions, `tilecore`, Room, DataStore, and Android platform adapters.
+
+**Non-Functional Requirements Coverage:**
+Performance is addressed through the Compose prototype gate, visible-only animation, caching, and Macrobenchmark expectations. Privacy is addressed through count-only sensitive tiles, no SMS/Call Log direct access in MVP, local-first storage, and graceful permission degradation. Accessibility is addressed through 48dp hit areas, TalkBack actions, focus order, and reduced-motion handling.
+
+### Implementation Readiness Validation
+
+**Decision Completeness:**
+Major decisions are documented. Exact library versions are not yet selected because no Android project exists. Implementation should select current stable Android Gradle Plugin, Kotlin, Compose, Room, DataStore, and WorkManager versions during the first implementation story and record them in Gradle/version catalog.
+
+**Structure Completeness:**
+The project structure is specific enough for initial implementation, but exact package-level files will naturally be created as stories implement each feature.
+
+**Pattern Completeness:**
+Conflict-prone areas are covered: data ownership, UI state flow, permission loss, layout determinism, cached live tile state, naming, package organization, and error/loading behavior.
+
+### Gap Analysis Results
+
+**Critical Gaps:**
+None that block architecture approval.
+
+**Important Gaps:**
+
+- Exact Gradle/Kotlin/AndroidX dependency versions are not documented yet.
+- Weather provider terms, attribution, quota, privacy, and public free-app compatibility must be verified before public release.
+- Compose Tile Grid performance must pass a real-device prototype gate before committing to Compose-only Start Screen implementation.
+
+**Nice-to-Have Gaps:**
+
+- ADR files can be added during implementation for policy-sensitive choices.
+- A benchmark module can be added once the first Start Screen prototype exists.
+- Package visibility strategy should be documented once the manifest is created.
+
+### Validation Issues Addressed
+
+The architecture already mitigates the main risks identified in research: Play policy risk is reduced by avoiding direct SMS/Call Log permissions, weather provider risk is isolated behind an adapter, Compose performance risk has a fallback path, and permission denial does not block launcher usability.
+
+### Architecture Completeness Checklist
+
+**Requirements Analysis**
+
+- [x] Project context thoroughly analyzed
+- [x] Scale and complexity assessed
+- [x] Technical constraints identified
+- [x] Cross-cutting concerns mapped
+
+**Architectural Decisions**
+
+- [ ] Critical decisions documented with versions
+- [x] Technology stack fully specified
+- [x] Integration patterns defined
+- [x] Performance considerations addressed
+
+**Implementation Patterns**
+
+- [x] Naming conventions established
+- [x] Structure patterns defined
+- [x] Communication patterns specified
+- [x] Process patterns documented
+
+**Project Structure**
+
+- [x] Complete directory structure defined
+- [x] Component boundaries established
+- [x] Integration points mapped
+- [x] Requirements to structure mapping complete
+
+### Architecture Readiness Assessment
+
+**Overall Status:** READY WITH MINOR GAPS
+
+**Confidence Level:** high
+
+**Key Strengths:**
+
+- Strong alignment between PRD, UX, research, and architecture.
+- Clear privacy-first and local-first implementation direction.
+- Explicit fallback path for the highest-risk UI performance area.
+- Consistent boundaries for AI agents to follow.
+
+**Areas for Future Enhancement:**
+
+- Record exact dependency versions after project scaffold.
+- Add ADRs for package visibility, weather provider, and Compose/custom View grid decision.
+- Add benchmark and release policy checklists once implementation begins.
+
+### Implementation Handoff
+
+**AI Agent Guidelines:**
+
+- Follow all architectural decisions exactly as documented.
+- Use implementation patterns consistently across all components.
+- Respect project structure and boundaries.
+- Refer to this document for all architectural questions.
+- Do not introduce direct SMS/Call Log access in MVP without explicit architecture revision.
+- Do not bypass the Compose Tile Grid performance gate.
+
+**First Implementation Priority:**
+Initialize the Android Studio `Empty Activity` Kotlin Compose project, then select and record stable dependency versions in Gradle/version catalog.

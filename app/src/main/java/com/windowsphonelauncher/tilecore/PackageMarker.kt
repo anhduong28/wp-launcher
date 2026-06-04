@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.tilecore
+
+internal object TileCorePackageMarker

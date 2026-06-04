@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.datacore
+
+internal object DataCorePackageMarker

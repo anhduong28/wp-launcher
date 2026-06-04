@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.permissions
+
+internal object PermissionsPackageMarker

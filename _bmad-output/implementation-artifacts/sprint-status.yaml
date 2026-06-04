@@ -1,0 +1,104 @@
+# generated: 2026-06-04
+# last_updated: 2026-06-04
+# project: WindowsPhone Launcher
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog -> in-progress: Automatically when first story is created (via create-story)
+#   - in-progress -> done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-06-04
+last_updated: 2026-06-04
+project: WindowsPhone Launcher
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: in-progress
+  1-1-scaffold-kotlin-compose-launcher-project: done
+  1-2-configure-android-launcher-entry-point: backlog
+  1-3-first-run-welcome-and-default-launcher-flow: backlog
+  1-4-initial-start-screen-shell: backlog
+  1-5-persist-first-run-and-preview-state: backlog
+  epic-1-retrospective: optional
+  epic-2: backlog
+  2-1-render-persisted-start-screen-tile-grid: backlog
+  2-2-store-tile-layout-state: backlog
+  2-3-launch-app-or-launcher-owned-tile-from-start-screen: backlog
+  2-4-enter-and-exit-start-screen-edit-mode: backlog
+  2-5-pin-and-unpin-tiles-on-the-start-screen: backlog
+  2-6-move-tiles-with-deterministic-reflow: backlog
+  2-7-resize-tiles-between-mvp-sizes: backlog
+  2-8-accessible-tile-editing-actions: backlog
+  2-9-validate-tile-grid-performance-prototype-gate: backlog
+  epic-2-retrospective: optional
+  epic-3: backlog
+  3-1-discover-launchable-apps-for-app-list: backlog
+  3-2-render-alphabetical-app-list: backlog
+  3-3-open-app-list-from-start-screen-swipe: backlog
+  3-4-return-to-start-screen-from-app-list: backlog
+  3-5-search-apps-from-app-list: backlog
+  3-6-launch-app-from-app-list: backlog
+  3-7-pin-app-from-app-list-to-start-screen: backlog
+  3-8-expose-app-list-accessibility-actions: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog
+  4-1-implement-windows-phone-visual-tokens: backlog
+  4-2-apply-default-multi-color-tile-styling: backlog
+  4-3-enforce-contrast-safe-tile-foregrounds: backlog
+  4-4-build-launcher-settings-surface: backlog
+  4-5-implement-color-mode-and-accent-color-settings: backlog
+  4-6-implement-background-setting: backlog
+  4-7-implement-live-tile-animation-preference: backlog
+  4-8-validate-visual-accessibility-and-reduced-motion: backlog
+  epic-4-retrospective: optional
+  epic-5: backlog
+  5-1-define-live-tile-state-and-adapter-contracts: backlog
+  5-2-implement-digital-clock-live-tile: backlog
+  5-3-implement-weather-setup-with-manual-location: backlog
+  5-4-implement-weather-provider-adapter-and-cache: backlog
+  5-5-schedule-weather-refresh-responsibly: backlog
+  5-6-implement-notification-access-flow-for-sms-and-phone-counts: backlog
+  5-7-show-notification-derived-sms-and-phone-counts: backlog
+  5-8-implement-calendar-permission-and-count-tile: backlog
+  5-9-implement-live-tile-flip-and-face-switching: backlog
+  5-10-validate-live-tile-privacy-stale-state-and-failure-handling: backlog
+  epic-5-retrospective: optional
+  epic-6: backlog
+  6-1-add-launcher-performance-benchmarks: backlog
+  6-2-validate-low-and-mid-range-device-usability: backlog
+  6-3-complete-accessibility-audit-and-fix-pass: backlog
+  6-4-validate-permission-denial-and-revocation-flows: backlog
+  6-5-complete-google-play-policy-and-package-visibility-review: backlog
+  6-6-verify-weather-provider-terms-and-attribution: backlog
+  6-7-add-regression-coverage-for-core-launcher-workflows: backlog
+  6-8-prepare-mvp-release-readiness-checklist: backlog
+  epic-6-retrospective: optional

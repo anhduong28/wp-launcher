@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.startscreen
+
+internal object StartScreenPackageMarker

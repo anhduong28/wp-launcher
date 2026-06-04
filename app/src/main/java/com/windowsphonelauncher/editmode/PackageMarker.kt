@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.editmode
+
+internal object EditModePackageMarker

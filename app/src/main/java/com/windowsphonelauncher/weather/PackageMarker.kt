@@ -1,0 +1,3 @@
+package com.windowsphonelauncher.weather
+
+internal object WeatherPackageMarker

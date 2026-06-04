@@ -47,3 +47,11 @@ wp-content/uploads/
 wp-content/cache/
 wp-content/upgrade/
 wp-content/backup*/
+
+# Android / Gradle
+.gradle/
+.gradle-local/
+.android-local/
+local.properties
+**/build/
+*.iml
