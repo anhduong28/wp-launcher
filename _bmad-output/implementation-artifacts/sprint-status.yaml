@@ -44,7 +44,7 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   epic-1: in-progress
   1-1-scaffold-kotlin-compose-launcher-project: done
-  1-2-configure-android-launcher-entry-point: backlog
+  1-2-configure-android-launcher-entry-point: done
   1-3-first-run-welcome-and-default-launcher-flow: backlog
   1-4-initial-start-screen-shell: backlog
   1-5-persist-first-run-and-preview-state: backlog
