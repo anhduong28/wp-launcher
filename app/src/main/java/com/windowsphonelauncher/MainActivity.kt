@@ -2,9 +2,12 @@ package com.windowsphonelauncher
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Color as AndroidColor
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.MaterialTheme
@@ -20,14 +23,18 @@ import com.windowsphonelauncher.onboarding.OnboardingStep
 import com.windowsphonelauncher.onboarding.OnboardingScreen
 import com.windowsphonelauncher.onboarding.OnboardingState
 import com.windowsphonelauncher.onboarding.OnboardingStateSaver
-import com.windowsphonelauncher.onboarding.PreviewPlaceholderScreen
 import com.windowsphonelauncher.onboarding.reduceOnboarding
+import com.windowsphonelauncher.startscreen.StartScreenShellScreen
 
 class MainActivity : ComponentActivity() {
     private lateinit var defaultHomeGateway: DefaultHomeGateway
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(AndroidColor.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(AndroidColor.TRANSPARENT),
+        )
         defaultHomeGateway = DefaultHomeGateway(this)
         setContent {
             var onboardingState by rememberSaveable(stateSaver = OnboardingStateSaver) {
@@ -84,7 +91,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun WindowsPhoneLauncherAppContent(
+fun WindowsPhoneLauncherAppContent(
     onboardingState: OnboardingState,
     onUseAsDefaultLauncher: () -> Unit,
     onTryAgain: () -> Unit,
@@ -92,7 +99,7 @@ private fun WindowsPhoneLauncherAppContent(
 ) {
     MaterialTheme {
         when (onboardingState.step) {
-            OnboardingStep.Preview -> PreviewPlaceholderScreen()
+            OnboardingStep.Preview -> StartScreenShellScreen()
             else -> OnboardingScreen(
                 state = onboardingState,
                 onUseAsDefaultLauncher = onUseAsDefaultLauncher,

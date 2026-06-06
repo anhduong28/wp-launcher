@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +33,15 @@ fun OnboardingScreen(
     onContinuePreview: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    require(state.step != OnboardingStep.Preview) {
+        "OnboardingStep.Preview is routed by the app shell, not OnboardingScreen."
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black)
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start,
@@ -60,40 +68,10 @@ fun OnboardingScreen(
                 onSecondaryAction = onContinuePreview,
             )
 
-            OnboardingStep.Preview -> OnboardingStepContent(
-                title = "Preview placeholder",
-                body = "Story 1.4 will replace this surface with the Start Screen shell.",
+            OnboardingStep.Preview -> error(
+                "OnboardingStep.Preview is routed by the app shell, not OnboardingScreen.",
             )
         }
-    }
-}
-
-@Composable
-fun PreviewPlaceholderScreen(
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start,
-    ) {
-        Text(
-            text = "Preview placeholder",
-            color = Color.White,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Medium,
-        )
-        Text(
-            text = "Story 1.4 will replace this surface with the Start Screen shell.",
-            color = Color(0xFFD8D8D8),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .widthIn(max = 440.dp)
-                .padding(top = 16.dp),
-        )
     }
 }
 

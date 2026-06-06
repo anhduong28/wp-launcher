@@ -1,5 +1,5 @@
 # generated: 2026-06-04
-# last_updated: 2026-06-05
+# last_updated: 2026-06-06
 # project: WindowsPhone Launcher
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-06-04
-last_updated: 2026-06-05
+last_updated: 2026-06-06
 project: WindowsPhone Launcher
 project_key: NOKEY
 tracking_system: file-system
@@ -46,8 +46,8 @@ development_status:
   1-1-scaffold-kotlin-compose-launcher-project: done
   1-2-configure-android-launcher-entry-point: done
   1-3-first-run-welcome-and-default-launcher-flow: done
-  1-4-initial-start-screen-shell: backlog
-  1-5-persist-first-run-and-preview-state: backlog
+  1-4-initial-start-screen-shell: done
+  1-5-persist-first-run-and-preview-state: ready-for-dev
   epic-1-retrospective: optional
   epic-2: backlog
   2-1-render-persisted-start-screen-tile-grid: backlog

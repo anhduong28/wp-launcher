@@ -46,16 +46,4 @@ class OnboardingScreenTest {
         composeRule.onNodeWithText("Continue preview").assertIsDisplayed()
     }
 
-    @Test
-    fun previewPlaceholderShowsSeparateSurfaceCopy() {
-        composeRule.setContent {
-            MaterialTheme {
-                PreviewPlaceholderScreen()
-            }
-        }
-
-        composeRule.onNodeWithText("Preview placeholder").assertIsDisplayed()
-        composeRule.onNodeWithText("Story 1.4 will replace this surface with the Start Screen shell.")
-            .assertIsDisplayed()
-    }
 }
