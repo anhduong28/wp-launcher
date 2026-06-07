@@ -10,24 +10,36 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.windowsphonelauncher.onboarding.DefaultHomeGateway
+import com.windowsphonelauncher.onboarding.FirstRunRoute
 import com.windowsphonelauncher.onboarding.OnboardingAction
-import com.windowsphonelauncher.onboarding.OnboardingStep
 import com.windowsphonelauncher.onboarding.OnboardingScreen
+import com.windowsphonelauncher.onboarding.OnboardingPreferencesRepository
 import com.windowsphonelauncher.onboarding.OnboardingState
-import com.windowsphonelauncher.onboarding.OnboardingStateSaver
+import com.windowsphonelauncher.onboarding.OnboardingStep
+import com.windowsphonelauncher.onboarding.launcherSettingsDataStore
 import com.windowsphonelauncher.onboarding.reduceOnboarding
 import com.windowsphonelauncher.startscreen.StartScreenShellScreen
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private lateinit var defaultHomeGateway: DefaultHomeGateway
+    private lateinit var onboardingPreferencesRepository: OnboardingPreferencesRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,23 +48,57 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(AndroidColor.TRANSPARENT),
         )
         defaultHomeGateway = DefaultHomeGateway(this)
+        onboardingPreferencesRepository = OnboardingPreferencesRepository(
+            applicationContext.launcherSettingsDataStore,
+        )
         setContent {
-            var onboardingState by rememberSaveable(stateSaver = OnboardingStateSaver) {
-                mutableStateOf(OnboardingState())
+            var appState by remember {
+                mutableStateOf<WindowsPhoneLauncherAppState>(WindowsPhoneLauncherAppState.Loading)
             }
+            val coroutineScope = rememberCoroutineScope()
+
+            LaunchedEffect(onboardingPreferencesRepository) {
+                appState = onboardingPreferencesRepository.firstRunRoute.first().toAppState()
+            }
+
+            fun currentOnboardingState(): OnboardingState {
+                val currentState = appState
+                return if (currentState is WindowsPhoneLauncherAppState.Ready) {
+                    currentState.onboardingState
+                } else {
+                    OnboardingState()
+                }
+            }
+
             val defaultHomeRequest = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.StartActivityForResult(),
             ) {
-                onboardingState = reduceOnboarding(
-                    onboardingState,
+                val isDefaultLauncher = defaultHomeGateway.isCurrentHomeApp()
+                val nextState = reduceOnboarding(
+                    currentOnboardingState(),
                     OnboardingAction.DefaultLauncherFlowReturned(
-                        isDefaultLauncher = defaultHomeGateway.isCurrentHomeApp(),
+                        isDefaultLauncher = isDefaultLauncher,
                     ),
                 )
+                if (isDefaultLauncher) {
+                    appState = WindowsPhoneLauncherAppState.Loading
+                    coroutineScope.launch {
+                        appState = try {
+                            onboardingPreferencesRepository.markDefaultLauncherAccepted()
+                            WindowsPhoneLauncherAppState.Ready(nextState)
+                        } catch (_: Exception) {
+                            WindowsPhoneLauncherAppState.Ready(OnboardingState(OnboardingStep.PreviewExplanation))
+                        }
+                    }
+                } else {
+                    appState = WindowsPhoneLauncherAppState.Ready(nextState)
+                }
             }
 
             fun dispatch(action: OnboardingAction) {
-                onboardingState = reduceOnboarding(onboardingState, action)
+                appState = WindowsPhoneLauncherAppState.Ready(
+                    reduceOnboarding(currentOnboardingState(), action),
+                )
             }
 
             fun launchDefaultHomeRequest(intents: List<Intent>) {
@@ -79,42 +125,82 @@ class MainActivity : ComponentActivity() {
             }
 
             WindowsPhoneLauncherAppContent(
-                onboardingState = onboardingState,
+                appState = appState,
                 onUseAsDefaultLauncher = ::requestDefaultHome,
                 onTryAgain = ::requestDefaultHome,
                 onContinuePreview = {
-                    dispatch(OnboardingAction.ContinuePreview)
+                    val nextState = reduceOnboarding(
+                        currentOnboardingState(),
+                        OnboardingAction.ContinuePreview,
+                    )
+                    appState = WindowsPhoneLauncherAppState.Loading
+                    coroutineScope.launch {
+                        appState = try {
+                            onboardingPreferencesRepository.markPreviewSelected()
+                            WindowsPhoneLauncherAppState.Ready(nextState)
+                        } catch (_: Exception) {
+                            WindowsPhoneLauncherAppState.Ready(OnboardingState(OnboardingStep.PreviewExplanation))
+                        }
+                    }
                 },
             )
         }
     }
 }
 
+sealed interface WindowsPhoneLauncherAppState {
+    data object Loading : WindowsPhoneLauncherAppState
+
+    data class Ready(
+        val onboardingState: OnboardingState,
+    ) : WindowsPhoneLauncherAppState
+}
+
+fun FirstRunRoute.toAppState(): WindowsPhoneLauncherAppState =
+    when (this) {
+        FirstRunRoute.Onboarding -> WindowsPhoneLauncherAppState.Ready(OnboardingState())
+        FirstRunRoute.StartScreenPreview -> WindowsPhoneLauncherAppState.Ready(
+            OnboardingState(step = OnboardingStep.Preview),
+        )
+    }
+
 @Composable
 fun WindowsPhoneLauncherAppContent(
-    onboardingState: OnboardingState,
+    appState: WindowsPhoneLauncherAppState,
     onUseAsDefaultLauncher: () -> Unit,
     onTryAgain: () -> Unit,
     onContinuePreview: () -> Unit,
 ) {
     MaterialTheme {
-        when (onboardingState.step) {
-            OnboardingStep.Preview -> StartScreenShellScreen()
-            else -> OnboardingScreen(
-                state = onboardingState,
-                onUseAsDefaultLauncher = onUseAsDefaultLauncher,
-                onTryAgain = onTryAgain,
-                onContinuePreview = onContinuePreview,
-            )
+        when (appState) {
+            WindowsPhoneLauncherAppState.Loading -> LoadingSurface()
+            is WindowsPhoneLauncherAppState.Ready -> when (appState.onboardingState.step) {
+                OnboardingStep.Preview -> StartScreenShellScreen()
+                else -> OnboardingScreen(
+                    state = appState.onboardingState,
+                    onUseAsDefaultLauncher = onUseAsDefaultLauncher,
+                    onTryAgain = onTryAgain,
+                    onContinuePreview = onContinuePreview,
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun LoadingSurface() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun WindowsPhoneLauncherAppContentPreview() {
     WindowsPhoneLauncherAppContent(
-        onboardingState = OnboardingState(),
+        appState = WindowsPhoneLauncherAppState.Ready(OnboardingState()),
         onUseAsDefaultLauncher = {},
         onTryAgain = {},
         onContinuePreview = {},

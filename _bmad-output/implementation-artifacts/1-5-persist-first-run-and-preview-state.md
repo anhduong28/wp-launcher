@@ -4,7 +4,7 @@ baseline_commit: 48c27c6
 
 # Story 1.5: Persist First-Run and Preview State
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -26,37 +26,43 @@ so that I do not repeat first-run setup unnecessarily.
 
 ## Tasks / Subtasks
 
-- [ ] Add Preferences DataStore as the lightweight settings persistence foundation (AC: 5, 6)
-  - [ ] Add `androidx.datastore:datastore-preferences` to the Gradle version catalog and app dependencies. Use the current stable Jetpack DataStore release, `1.2.1`, unless a newer stable version is already selected in project configuration at implementation time.
-  - [ ] Keep DataStore dependency declarations centralized in `gradle/libs.versions.toml`; do not hard-code versions in `app/build.gradle.kts`.
-  - [ ] Do not add Room, WorkManager, serialization, Proto DataStore, or app-discovery dependencies in this story.
-- [ ] Create an onboarding/settings persistence boundary (AC: 1-6)
-  - [ ] Add a small model under `onboarding` or `datacore` representing first-run routing state, for example `OnboardingDestination` or `FirstRunState`.
-  - [ ] Add a repository/data source that owns Preferences DataStore access for onboarding flags. Keep UI from reading DataStore directly.
-  - [ ] Persist enough information to distinguish first-run incomplete from completed/preview mode. A boolean such as `has_completed_first_run` is sufficient only if preview/default-home distinction is not needed by current UI; if stored, keep any route enum stable and explicit.
-  - [ ] Treat DataStore read failures conservatively: default to onboarding welcome, not a crash or a false completed state.
-  - [ ] Do not persist UI-facing copy strings as logic.
-- [ ] Route app startup from persisted first-run state (AC: 1, 2, 4)
-  - [ ] Replace the current unconditional `OnboardingState()` initialization in `MainActivity` with a startup state that waits for persisted first-run state.
-  - [ ] If state is incomplete or missing, show onboarding welcome.
-  - [ ] If state says default onboarding completed or preview selected, render `StartScreenShellScreen()`.
-  - [ ] Keep navigation minimal and launcher-like; no navigation library is required for this story.
-  - [ ] Keep Story 1.4 edge-to-edge/system inset handling intact.
-- [ ] Persist only completed/default or explicit preview choices (AC: 1-4)
-  - [ ] When `DefaultLauncherFlowReturned(isDefaultLauncher = true)` transitions to `OnboardingStep.Preview`, persist first-run completion before or as part of rendering the Start Screen shell.
-  - [ ] When `Continue preview` transitions to `OnboardingStep.Preview`, persist preview/first-run completion.
-  - [ ] When default-home flow returns with `isDefaultLauncher = false`, show `PreviewExplanation` but do not persist completion.
-  - [ ] `Try again` must re-enter the same default-home request path and must not clear or corrupt persisted state.
-- [ ] Add focused tests for persistence routing and scope boundaries (AC: 1-7)
-  - [ ] Add unit tests around pure mapping/reducer logic for incomplete, completed, preview-selected, and default-home-canceled states.
-  - [ ] Add DataStore-backed repository tests using a temporary test file or test scope so persisted state survives repository recreation.
-  - [ ] Add instrumentation or Compose tests proving `WindowsPhoneLauncherAppContent` / app route displays onboarding for incomplete state and Start Screen shell for completed/preview state. Prefer testable state-holder seams over sleeping/waiting on real I/O.
-  - [ ] Keep or extend manifest regression tests asserting no `<uses-permission>`, no `<queries>`, and no notification listener service declarations.
-  - [ ] If DataStore dependency download is not available in the local Gradle cache, record the failure and rerun with approved network access rather than replacing DataStore with SharedPreferences.
-- [ ] Run validation (AC: 7)
-  - [ ] Run `.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:assembleDebugAndroidTest :app:lintDebug --no-daemon`.
-  - [ ] If an emulator/device is available and instrumentation execution is practical, run `.\gradlew.bat :app:connectedDebugAndroidTest --no-daemon`.
-  - [ ] Record commands and results in the Dev Agent Record completion notes.
+- [x] Add Preferences DataStore as the lightweight settings persistence foundation (AC: 5, 6)
+  - [x] Add `androidx.datastore:datastore-preferences` to the Gradle version catalog and app dependencies. Use the current stable Jetpack DataStore release, `1.2.1`, unless a newer stable version is already selected in project configuration at implementation time.
+  - [x] Keep DataStore dependency declarations centralized in `gradle/libs.versions.toml`; do not hard-code versions in `app/build.gradle.kts`.
+  - [x] Do not add Room, WorkManager, serialization, Proto DataStore, or app-discovery dependencies in this story.
+- [x] Create an onboarding/settings persistence boundary (AC: 1-6)
+  - [x] Add a small model under `onboarding` or `datacore` representing first-run routing state, for example `OnboardingDestination` or `FirstRunState`.
+  - [x] Add a repository/data source that owns Preferences DataStore access for onboarding flags. Keep UI from reading DataStore directly.
+  - [x] Persist enough information to distinguish first-run incomplete from completed/preview mode. A boolean such as `has_completed_first_run` is sufficient only if preview/default-home distinction is not needed by current UI; if stored, keep any route enum stable and explicit.
+  - [x] Treat DataStore read failures conservatively: default to onboarding welcome, not a crash or a false completed state.
+  - [x] Do not persist UI-facing copy strings as logic.
+- [x] Route app startup from persisted first-run state (AC: 1, 2, 4)
+  - [x] Replace the current unconditional `OnboardingState()` initialization in `MainActivity` with a startup state that waits for persisted first-run state.
+  - [x] If state is incomplete or missing, show onboarding welcome.
+  - [x] If state says default onboarding completed or preview selected, render `StartScreenShellScreen()`.
+  - [x] Keep navigation minimal and launcher-like; no navigation library is required for this story.
+  - [x] Keep Story 1.4 edge-to-edge/system inset handling intact.
+- [x] Persist only completed/default or explicit preview choices (AC: 1-4)
+  - [x] When `DefaultLauncherFlowReturned(isDefaultLauncher = true)` transitions to `OnboardingStep.Preview`, persist first-run completion before or as part of rendering the Start Screen shell.
+  - [x] When `Continue preview` transitions to `OnboardingStep.Preview`, persist preview/first-run completion.
+  - [x] When default-home flow returns with `isDefaultLauncher = false`, show `PreviewExplanation` but do not persist completion.
+  - [x] `Try again` must re-enter the same default-home request path and must not clear or corrupt persisted state.
+- [x] Add focused tests for persistence routing and scope boundaries (AC: 1-7)
+  - [x] Add unit tests around pure mapping/reducer logic for incomplete, completed, preview-selected, and default-home-canceled states.
+  - [x] Add DataStore-backed repository tests using a temporary test file or test scope so persisted state survives repository recreation.
+  - [x] Add instrumentation or Compose tests proving `WindowsPhoneLauncherAppContent` / app route displays onboarding for incomplete state and Start Screen shell for completed/preview state. Prefer testable state-holder seams over sleeping/waiting on real I/O.
+  - [x] Keep or extend manifest regression tests asserting no `<uses-permission>`, no `<queries>`, and no notification listener service declarations.
+  - [x] If DataStore dependency download is not available in the local Gradle cache, record the failure and rerun with approved network access rather than replacing DataStore with SharedPreferences.
+- [x] Run validation (AC: 7)
+  - [x] Run `.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:assembleDebugAndroidTest :app:lintDebug --no-daemon`.
+  - [x] If an emulator/device is available and instrumentation execution is practical, run `.\gradlew.bat :app:connectedDebugAndroidTest --no-daemon`.
+  - [x] Record commands and results in the Dev Agent Record completion notes.
+
+### Review Findings
+
+- [x] [Review][Patch] Persist completion before rendering the Start Screen shell [app/src/main/java/com/windowsphonelauncher/MainActivity.kt:84]
+- [x] [Review][Patch] Handle corrupted/non-IOException DataStore reads conservatively [app/src/main/java/com/windowsphonelauncher/onboarding/OnboardingPreferencesRepository.kt:29]
+- [x] [Review][Patch] Recreate the DataStore boundary in restart persistence tests [app/src/test/java/com/windowsphonelauncher/onboarding/OnboardingPreferencesRepositoryTest.kt:37]
 
 ## Dev Notes
 
@@ -154,17 +160,45 @@ so that I do not repeat first-run setup unnecessarily.
 
 ### Agent Model Used
 
-TBD by dev agent.
+Codex GPT-5
 
 ### Debug Log References
 
-TBD by dev agent.
+- Initial unit validation: `.\gradlew.bat :app:testDebugUnitTest --no-daemon` failed because DataStore tests used pre-created temp files; fixed tests to provide non-existent temp paths to `PreferenceDataStoreFactory`.
+- Unit validation after fix: `.\gradlew.bat :app:testDebugUnitTest --no-daemon` passed.
+- Full validation: `.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:assembleDebugAndroidTest :app:lintDebug --no-daemon` passed.
+- Device check: `adb devices` returned no attached devices, so `connectedDebugAndroidTest` was not run.
+- Code review patch validation on 2026-06-07: `.\gradlew.bat :app:testDebugUnitTest --no-daemon` passed.
+- Code review patch validation on 2026-06-07: `.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:assembleDebugAndroidTest :app:lintDebug --no-daemon` passed.
+- Device check on 2026-06-07: SDK `platform-tools\adb.exe devices` returned no attached devices, so `connectedDebugAndroidTest` was not run.
 
 ### Completion Notes List
 
 - Story context created by BMad create-story workflow on 2026-06-06.
 - Ultimate context engine analysis completed - comprehensive developer guide created.
+- Added Preferences DataStore dependency `androidx.datastore:datastore-preferences:1.2.1` through the version catalog.
+- Added `OnboardingPreferencesRepository` with a stable `launcher_settings` Preferences DataStore, `FirstRunRoute`, conservative IOException fallback, and explicit mark methods for default-launcher acceptance and preview selection.
+- Reworked `MainActivity` startup routing to collect persisted first-run route before showing onboarding, preserving a neutral loading surface and routing persisted completion/preview to the Start Screen shell.
+- Persisted only explicit completion paths: successful default-home return and `Continue preview`; default-home cancellation remains recoverable and does not persist completion.
+- Added unit tests for DataStore-backed persistence and first-run route mapping, and updated Compose route tests for welcome vs Start Screen preview routing.
+- Validation passed for debug assemble, debug unit tests, debug androidTest APK assemble, and debug lint. No connected device/emulator was attached for `connectedDebugAndroidTest`.
+- Code review fixes ensure completion is persisted before rendering the Start Screen shell, corrupted DataStore files fall back to empty preferences, and persistence tests recreate DataStore from the same file.
 
 ### File List
 
-TBD by dev agent.
+- `_bmad-output/implementation-artifacts/1-5-persist-first-run-and-preview-state.md`
+- `_bmad-output/implementation-artifacts/sprint-status.yaml`
+- `app/build.gradle.kts`
+- `gradle/libs.versions.toml`
+- `app/src/main/java/com/windowsphonelauncher/MainActivity.kt`
+- `app/src/main/java/com/windowsphonelauncher/onboarding/OnboardingPreferencesRepository.kt`
+- `app/src/test/java/com/windowsphonelauncher/WindowsPhoneLauncherAppStateTest.kt`
+- `app/src/test/java/com/windowsphonelauncher/onboarding/OnboardingPreferencesRepositoryTest.kt`
+- `app/src/test/java/com/windowsphonelauncher/onboarding/OnboardingReducerTest.kt`
+- `app/src/androidTest/java/com/windowsphonelauncher/WindowsPhoneLauncherAppContentTest.kt`
+
+## Change Log
+
+- 2026-06-06: Added DataStore-backed first-run persistence and startup routing.
+- 2026-06-06: Added unit and Compose route coverage for persisted onboarding/start screen behavior.
+- 2026-06-06: Validated debug build, unit tests, androidTest APK build, and lint.

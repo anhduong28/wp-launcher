@@ -30,7 +30,7 @@ class OnboardingReducerTest {
     }
 
     @Test
-    fun returnAsDefaultContinuesToPreviewPlaceholderForNextStory() {
+    fun returnAsDefaultContinuesToStartScreenPreviewStep() {
         val state = reduceOnboarding(
             state = OnboardingState(step = OnboardingStep.RequestingDefaultLauncher),
             action = OnboardingAction.DefaultLauncherFlowReturned(isDefaultLauncher = true),
