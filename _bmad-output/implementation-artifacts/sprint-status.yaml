@@ -49,8 +49,8 @@ development_status:
   1-4-initial-start-screen-shell: done
   1-5-persist-first-run-and-preview-state: done
   epic-1-retrospective: optional
-  epic-2: backlog
-  2-1-render-persisted-start-screen-tile-grid: backlog
+  epic-2: in-progress
+  2-1-render-persisted-start-screen-tile-grid: done
   2-2-store-tile-layout-state: backlog
   2-3-launch-app-or-launcher-owned-tile-from-start-screen: backlog
   2-4-enter-and-exit-start-screen-edit-mode: backlog
